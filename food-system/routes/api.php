@@ -2,9 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PetitionApiController;
 use App\Http\Controllers\Api\AuthApiController;
-use App\Http\Controllers\Api\DonationController;
+use App\Http\Controllers\Api\RestaurantController;
+use App\Http\Controllers\Api\FoodAndBeverageController;
+use App\Http\Controllers\Api\DeliveryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +19,12 @@ use App\Http\Controllers\Api\DonationController;
 Route::post('/login', [AuthApiController::class, 'login']);
 Route::post('/register', [AuthApiController::class, 'register']);
 
-// Petitions
-Route::get('/petitions', [PetitionApiController::class, 'index']);
-Route::get('/petitions/{petition}', [PetitionApiController::class, 'show']);
+// Restaurants
+Route::get('/resto', [RestaurantController::class, 'index']);
+Route::get('/resto/desc', [RestaurantController::class, 'indexDesc']);
+
+// Food & Beverages
+Route::get('/resto/F&B', [FoodAndBeverageController::class, 'index']);
 
 
 // --- Protected Routes (Login Required) ---
@@ -37,7 +41,16 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['user' => $request->user()]);
     });
 
-    // Donations
-    Route::get('/petitions/{petition}/donations', [DonationController::class, 'index']);
-    Route::post('/petitions/{petition}/donations', [DonationController::class, 'store']);
+    // Restaurants (CRUD)
+    Route::post('/resto', [RestaurantController::class, 'store']);
+    Route::put('/resto', [RestaurantController::class, 'update']);
+    Route::delete('/resto', [RestaurantController::class, 'destroy']);
+
+    // Food & Beverages (CRUD)
+    Route::post('/resto/F&B', [FoodAndBeverageController::class, 'store']);
+    Route::put('/resto/F&B', [FoodAndBeverageController::class, 'update']);
+    Route::delete('/resto/F&B', [FoodAndBeverageController::class, 'destroy']);
+
+    // Delivery
+    Route::post('/resto/delivery', [DeliveryController::class, 'store']);
 });

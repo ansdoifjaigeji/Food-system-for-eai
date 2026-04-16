@@ -11,10 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('petitions', function (Blueprint $table) {
-    $table->unsignedBigInteger('user_id')->nullable()->after('id'); 
-});
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('role')->default('user')->after('email');
+        });
     }
 
     /**
@@ -22,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('petitions', function (Blueprint $table) {
-            $table->dropColumn('user_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('role');
         });
     }
 };

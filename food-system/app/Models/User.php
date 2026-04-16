@@ -47,12 +47,19 @@ class User extends Authenticatable
         'dark_mode' => 'boolean',
     ];
 
-    public function donations() {
-        return $this->hasMany(Donation::class);
+    /**
+     * Restaurants owned by this user.
+     */
+    public function restaurants()
+    {
+        return $this->hasMany(Restaurant::class);
     }
 
-    public function signatures()
+    /**
+     * Delivery orders placed by this user.
+     */
+    public function deliveries()
     {
-        return $this->hasMany(\App\Models\Signature::class);
+        return $this->hasMany(Delivery::class);
     }
 }
