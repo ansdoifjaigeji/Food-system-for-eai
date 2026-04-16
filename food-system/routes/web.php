@@ -2,11 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\PetitionController;
+use App\Http\Controllers\RestaurantWebController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\UserProfileController;
-use App\Http\Controllers\DonationWebController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,27 +15,16 @@ use App\Http\Controllers\DonationWebController;
 
 // --- Static Pages ---
 Route::get('/', [PageController::class, 'home'])->name('home');
-Route::get('/about-us', [PageController::class, 'about'])->name('about');
+Route::get('/about', [PageController::class, 'about'])->name('about');
 
-// Petition Routes (Public)
-Route::get('/explore', [PetitionController::class, 'index'])->name('petitions.index');
-Route::get('/petitions/{id}', [PetitionController::class, 'show'])->name('petitions.show');
-Route::post('/petitions/{id}/sign', [App\Http\Controllers\SignatureController::class, 'store'])->name('petition.sign');
+// --- Restaurant Browsing (Public) ---
+Route::get('/restaurants', [RestaurantWebController::class, 'index'])->name('restaurants.index');
+Route::get('/restaurants/{id}', [RestaurantWebController::class, 'show'])->name('restaurants.show');
 
-// Petition Routes (Only logged-in users)
+// --- Protected Routes (Logged-in Users) ---
 Route::middleware('auth')->group(function () {
 
-    // Start petition
-    Route::get('/start-petition', [PetitionController::class, 'create'])->name('petitions.create');
-    Route::post('/start-petition', [PetitionController::class, 'store'])->name('petitions.store');
-
-    // Edit / Update / Delete petition
-    Route::get('/petitions/{id}/edit', [PetitionController::class, 'edit'])->name('petitions.edit');
-    Route::put('/petitions/{id}', [PetitionController::class, 'update'])->name('petitions.update');
-    Route::delete('/petitions/{id}', [PetitionController::class, 'destroy'])->name('petitions.destroy');
-
-
-    // User profile routes
+    // User profile
     Route::get('/profile', [UserProfileController::class, 'show'])->name('profile.show');
     Route::get('/settings', [UserProfileController::class, 'settings'])->name('profile.settings');
 
@@ -47,12 +35,9 @@ Route::middleware('auth')->group(function () {
 
     // Logout
     Route::post('/log-out', [LoginController::class, 'destroy'])->name('logout');
-
-    // Delete a comment from a signature (only by owner)
-    Route::delete('/signatures/{id}/comment', [App\Http\Controllers\SignatureController::class, 'destroyComment'])->name('signature.comment.destroy');
 });
 
-// Authentication Routes (guest only)
+// --- Authentication Routes (Guest only) ---
 Route::middleware('guest')->group(function () {
     Route::get('/log-in', [LoginController::class, 'create'])->name('login');
     Route::post('/log-in', [LoginController::class, 'store'])->name('login.store');

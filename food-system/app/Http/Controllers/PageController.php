@@ -2,27 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Post;
+use App\Models\Restaurant;
+use App\Models\FoodAndBeverage;
+use App\Models\Delivery;
 use Illuminate\Http\Request;
-use App\Models\Petition;
 
 class PageController extends Controller
 {
     /**
-     * Show the home page with trending petitions.
+     * Show the home page with featured restaurants and stats.
      */
     public function home()
     {
-        // Fetch top 3 petitions by signatures (and donations as secondary sort)
-        $trending_petitions = Petition::orderByDesc('signature_count')
-                                      ->orderByDesc('donation_total')
-                                      ->take(3)
-                                      ->get(['id','title','description','signature_count','donation_total']);
+        $featuredRestaurants = Restaurant::with('foodAndBeverages')
+            ->where('is_active', true)
+            ->orderByDesc('created_at')
+            ->take(3)
+            ->get();
 
-        // Latest articles/posts (used on the home page)
-        $posts = Post::orderByDesc('created_at')->take(3)->get(['id','title','content']);
+        $restaurantCount = Restaurant::count();
+        $menuCount = FoodAndBeverage::count();
+        $deliveryCount = Delivery::count();
 
-        return view('pages.home', compact('trending_petitions', 'posts'));
+        return view('pages.home', compact(
+            'featuredRestaurants',
+            'restaurantCount',
+            'menuCount',
+            'deliveryCount'
+        ));
     }
 
     /**
