@@ -46,7 +46,7 @@
 </section>
 
 {{-- Stats Bar --}}
-<section class="relative -mt-12 z-20 max-w-5xl mx-auto px-4">
+<section class="relative mt-4 z-20 max-w-5xl mx-auto px-4">
     <div class="bg-white dark:bg-navy-800 rounded-3xl shadow-2xl p-8 grid grid-cols-1 sm:grid-cols-3 gap-6 border border-gray-100 dark:border-gray-700/50">
         <div class="text-center">
             <p class="text-3xl font-black font-display gradient-text">{{ $restaurantCount ?? 0 }}+</p>
