@@ -1,3 +1,17 @@
+type User {
+    id: ID!
+    name: String!
+    email: String!
+    avatar: String
+    dark_mode: Boolean
+    role: String
+    created_at: String
+    updated_at: String
+
+    
+    restaurants: [Restaurant!]! @hasMany
+}
+
 type Restaurant {
     id: ID!
     user_id: ID!
@@ -9,8 +23,11 @@ type Restaurant {
     created_at: String
     updated_at: String
     
-    "Relationship mapping to access menu items directly from a restaurant"
+    
     foodAndBeverages: [FoodAndBeverage!]! @hasMany
+
+    
+    user: User! @belongsTo
 }
 
 type FoodAndBeverage {
@@ -24,16 +41,31 @@ type FoodAndBeverage {
     created_at: String
     updated_at: String
     
-    "Relationship mapping to see which restaurant owns this item"
+    
     restaurant: Restaurant! @belongsTo
 }
 
 type Query {
+    
+    # USER QUERIES
+    
+    "View all users within the system"
+    allUsers: [User!]! @all
+
+    "View a single user by their ID"
+    user(id: ID! @eq): User @find
+
+    
+    # RESTAURANT QUERIES
+    
     "View all restaurants"
     allRestaurants: [Restaurant!]! @all
 
     "View a single restaurant by its ID"
     restaurant(id: ID! @eq): Restaurant @find
+
+    
+    # FOOD & BEVERAGE QUERIES
 
     "View all food & beverage menu items"
     allFoodAndBeverages: [FoodAndBeverage!]! @all
@@ -43,6 +75,61 @@ type Query {
 }
 
 type Mutation {
+    
+    # USER MUTATIONS
+    
+    "Create a new user"
+    createUser(
+        name: String!
+        email: String!
+        avatar: String
+        dark_mode: Boolean = false
+        role: String = "merchant"
+    ): User! @create
+
+    "Update an existing user's details"
+    updateUser(
+        id: ID!
+        name: String
+        email: String
+        avatar: String
+        dark_mode: Boolean
+        role: String
+    ): User! @update
+
+    "Delete a user from the system"
+    deleteUser(id: ID! @eq): User @delete
+
+    
+    # RESTAURANT MUTATIONS 
+    
+    "Create a new restaurant"
+    createRestaurant(
+        user_id: ID!
+        name: String!
+        description: String
+        address: String
+        phone: String
+        is_active: Boolean = true
+    ): Restaurant! @create
+
+    "Update an existing restaurant"
+    updateRestaurant(
+        id: ID!
+        user_id: ID
+        name: String
+        description: String
+        address: String
+        phone: String
+        is_active: Boolean
+    ): Restaurant! @update
+
+    "Delete a restaurant"
+    deleteRestaurant(id: ID! @eq): Restaurant @delete
+
+    
+    # FOOD & BEVERAGE MUTATIONS
+    
     "Create a new food or beverage item"
     createFoodAndBeverage(
         restaurant_id: ID!
