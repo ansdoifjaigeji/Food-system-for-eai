@@ -1,0 +1,69 @@
+type Restaurant {
+    id: ID!
+    user_id: ID!
+    name: String!
+    description: String
+    address: String
+    phone: String
+    is_active: Boolean!
+    created_at: String
+    updated_at: String
+    
+    "Relationship mapping to access menu items directly from a restaurant"
+    foodAndBeverages: [FoodAndBeverage!]! @hasMany
+}
+
+type FoodAndBeverage {
+    id: ID!
+    restaurant_id: ID!
+    name: String!
+    description: String
+    price: Float!
+    category: String
+    is_available: Boolean!
+    created_at: String
+    updated_at: String
+    
+    "Relationship mapping to see which restaurant owns this item"
+    restaurant: Restaurant! @belongsTo
+}
+
+type Query {
+    "View all restaurants"
+    allRestaurants: [Restaurant!]! @all
+
+    "View a single restaurant by its ID"
+    restaurant(id: ID! @eq): Restaurant @find
+
+    "View all food & beverage menu items"
+    allFoodAndBeverages: [FoodAndBeverage!]! @all
+
+    "View a single food & beverage item by its ID"
+    foodAndBeverage(id: ID! @eq): FoodAndBeverage @find
+}
+
+type Mutation {
+    "Create a new food or beverage item"
+    createFoodAndBeverage(
+        restaurant_id: ID!
+        name: String!
+        description: String
+        price: Float!
+        category: String
+        is_available: Boolean = true
+    ): FoodAndBeverage! @create
+
+    "Update an existing food or beverage item"
+    updateFoodAndBeverage(
+        id: ID!
+        restaurant_id: ID
+        name: String
+        description: String
+        price: Float
+        category: String
+        is_available: Boolean
+    ): FoodAndBeverage! @update
+
+    "Delete a food or beverage item"
+    deleteFoodAndBeverage(id: ID! @eq): FoodAndBeverage @delete
+}
