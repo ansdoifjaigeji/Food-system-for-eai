@@ -82,6 +82,7 @@ type Mutation {
     createUser(
         name: String!
         email: String!
+        password: String!
         avatar: String
         dark_mode: Boolean = false
         role: String = "merchant"
@@ -92,6 +93,7 @@ type Mutation {
         id: ID!
         name: String
         email: String
+        password: String
         avatar: String
         dark_mode: Boolean
         role: String
